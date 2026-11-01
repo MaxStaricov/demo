@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <!-- Целевая платформа: .NET 8 — самый широкий охват (8/9/10).
+         Если установлен только .NET 10 SDK/Runtime — замените на net10.0 -->
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>

@@ -34,6 +34,22 @@ demo/Demo.csproj + Program.cs              консольная демонстр
 dotnet run --project demo
 ```
 
+### Если установлен только .NET 10 (Homebrew: `/opt/homebrew/Cellar/dotnet`)
+
+Приложение таргетит net8.0, а runtime-фреймворки обратно совместимы только вверх:
+.NET 10 Runtime **не** запустит сборку net8.0 («You must install or update .NET to run this application»).
+В этом случае достаточно поменять целевой фреймворк на net10.0 в двух csproj-файлах
+(исходный код от этого не зависит):
+
+```bash
+sed -i '' 's|<TargetFramework>net8.0</TargetFramework>|<TargetFramework>net10.0</TargetFramework>|' \
+  demo/Demo.csproj src/Humanizer.DateTimeHumanizeStrategy/Humanizer.DateTimeHumanizeStrategy.csproj
+dotnet run --project demo
+```
+
+Файл `global.json` (`rollForward: latestMajor`) позволяет собирать проект как SDK 8.x, так и 10.x.
+Альтернатива — установить .NET 8 Runtime alongside: `brew install dotnet@8`.
+
 ## Что демонстрируется
 
 1. `DefaultDateTimeHumanizeStrategy` — классический «2 days ago / in 1 hour».
