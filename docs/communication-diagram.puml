@@ -1,0 +1,78 @@
+@startuml CommunicationDiagram
+title Диаграмма коммуникации — Demo (Humanizer DateTimeHumanizeStrategy)
+
+skinparam packageStyle rectangle
+hide methods
+
+actor "Program.cs\n(demo)" as Program
+
+package "Подсистема DateTimeHumanizeStrategy" {
+    component "HumanizeExtensions" as Ext
+    interface "IDateTimeHumanizeStrategy" as IDT
+    component "DefaultDateTime\nHumanizeStrategy" as DefDT
+    component "PrecisionDateTime\nHumanizeStrategy" as PrecDT
+    component "«custom»\nRussianishStrategy" as Custom
+    interface "IDateOnly / ITimeOnly /\nIDateTimeOffset\nHumanizeStrategy" as IOthers
+    component "DefaultDateOnly /\nDefaultTimeOnly /\nDefaultDateTimeOffset\nHumanizeStrategy" as DefOthers
+    component "DateTimeHumanize\nAlgorithms" as Algo
+}
+
+package "Shim (слой локализации)" {
+    component "Configurator" as Conf
+    interface "IFormatter" as IForm
+    component "DefaultFormatter" as Fmt
+    component "TimeUnit / Tense" as TU <<enumeration>>
+}
+
+' --- Структурные связи (реализация интерфейсов) ---
+DefDT ..|> IDT
+PrecDT ..|> IDT
+Custom ..|> IDT
+DefOthers ..|> IOthers
+Fmt ..|> IForm
+
+' --- 1: DateTime.Humanize() (default) ---
+Program --> Ext : 1.0 Humanize()
+Ext --> DefDT : 1.1 Humanize(input, now, culture)
+DefDT --> Algo : 1.2 DefaultHumanize(...)
+Algo --> Conf : 1.3 GetFormatter(culture)
+Conf --> Fmt : 1.4 возвращает Instance
+Algo --> Fmt : 1.5 DateHumanize(unit, tense, count)
+Fmt --> Algo : 1.6 "14 minutes ago"
+Algo --> DefDT : 1.7 строка
+DefDT --> Ext : 1.8 строка
+Ext --> Program : 1.9 строка
+
+' --- 2: PrecisionDateTimeHumanizeStrategy ---
+Program --> PrecDT : 2.0 new Precision(0.85)\n2.1 Humanize(past, now, null)
+PrecDT --> Algo : 2.2 PrecisionHumanize(..., precision, culture)
+Algo --> Conf : 2.3 GetFormatter(culture)
+Algo --> Fmt : 2.4 DateHumanize(unit, tense, count)
+Fmt --> Algo : 2.5 "an hour ago"
+Algo --> PrecDT : 2.6 строка
+PrecDT --> Program : 2.7 строка
+
+' --- 3: Прямой вызов Default-стратегии ---
+Program --> DefDT : 3.0 strategy.Humanize(a, b, null)
+
+' --- 4: DateOnly / TimeOnly / DateTimeOffset ---
+Program --> Ext : 4.0 dateOnly / timeOnly /\ndateTimeOffset.Humanize()
+Ext --> DefOthers : 4.1 Humanize(input, base, culture)
+DefOthers --> Algo : 4.2 DefaultHumanize(...)
+Algo --> Conf : 4.3 GetFormatter(culture)
+Algo --> Fmt : 4.4 DateHumanize(...) /\nDateHumanize_Today(now)
+Fmt --> Algo : 4.5 "today" / "in an hour" / ...
+Algo --> DefOthers : 4.6 строка
+DefOthers --> Ext : 4.7 строка
+Ext --> Program : 4.8 строка
+
+' --- 5: Кастомная стратегия ---
+Program --> Custom : 5.0 Humanize(past, now, culture)
+Custom --> Program : 5.1 "2 дн. назад"
+
+' --- Используемые типы ---
+Algo ..> TU : использует
+Fmt ..> TU : использует
+IOthers ..> TU : использует
+
+@enduml
