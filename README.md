@@ -58,7 +58,7 @@ dotnet run --project demo
 4. Стратегии для `DateOnly`, `TimeOnly`, `DateTimeOffset`.
 5. Собственная стратегия через `IDateTimeHumanizeStrategy` (русский вариант) — расширяемость подсистемы.
 
-Целевой фреймворк: .NET 8.0 (DateOnly/TimeOnly требуют net6+; файлы защищены `#if NET6_0_OR_GREATER`).
+Целевой фреймворк: .NET 10.0 (DateOnly/TimeOnly требуют net6+; файлы защищены `#if NET6_0_OR_GREATER`).
 
 ## UML-диаграммы
 
