@@ -43,3 +43,13 @@ dotnet run --project demo
 5. Собственная стратегия через `IDateTimeHumanizeStrategy` (русский вариант) — расширяемость подсистемы.
 
 Целевой фреймворк: .NET 8.0 (DateOnly/TimeOnly требуют net6+; файлы защищены `#if NET6_0_OR_GREATER`).
+
+## UML-диаграммы
+
+В каталоге [`docs/`](docs/) лежат исходники (PlantUML) и отрендеренные картинки:
+
+- `docs/sequence-diagram.puml` — диаграмма последовательности (`SequenceDiagram.png/.svg`)
+- `docs/communication-diagram.puml` — диаграмма коммуникации (`CommunicationDiagram.png/.svg`)
+
+Нумерация сообщений (1.x–5.x) на обеих диаграммах одинаковая и соответствует
+пяти сегментам демо выше. Перегенерация — см. `docs/README.md`.
