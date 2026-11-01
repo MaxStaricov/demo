@@ -34,28 +34,18 @@ demo/Demo.csproj + Program.cs              консольная демонстр
 dotnet run --project demo
 ```
 
-### Если установлен только .NET 10 (Homebrew: `/opt/homebrew/Cellar/dotnet`)
+### Требования к .NET
 
-Приложение таргетит net8.0, а runtime-фреймворки обратно совместимы только вверх:
-.NET 10 Runtime **не** запустит сборку net8.0 — отсюда «You must install or update .NET to run this application».
-Два варианта решения:
+Проект таргетит **net10.0** — достаточно установленного .NET 10 SDK/Runtime
+(например, Homebrew: `/opt/homebrew/Cellar/dotnet`). `global.json` содержит
+`rollForward: latestMajor`, поэтому подойдёт любой свежий SDK 10.x.
 
-**Вариант A (рекомендуемый)** — установить рядом .NET 8 SDK/Runtime, ничего в коде менять не нужно:
-
-```bash
-brew install dotnet@8   # или скачать пакет с https://dotnet.microsoft.com/download
-cd demo && dotnet run
-```
-
-`global.json` (`rollForward: latestMajor`) уже добавлен: он позволяет собирать проект
-любым установленным SDK (8.x или 10.x) — сам по себе он ошибку рантайма не лечит, но
-не даёт новому SDK конфликтовать с проектом при сборке.
-
-**Вариант B** — пересобрать под .NET 10, поменяв целевой фреймворк в двух csproj-файлах
-(исходный код от этого не зависит — стратегии используют только API, доступный с .NET 6):
+Если у вас только .NET 8, замените `<TargetFramework>net10.0</TargetFramework>`
+на `net8.0` в двух csproj-файлах — исходный код от этого не зависит
+(стратегии используют только API, доступный с .NET 6):
 
 ```bash
-sed -i '' 's|<TargetFramework>net8.0</TargetFramework>|<TargetFramework>net10.0</TargetFramework>|' \
+sed -i '' 's|<TargetFramework>net10.0</TargetFramework>|<TargetFramework>net8.0</TargetFramework>|' \
   demo/Demo.csproj src/Humanizer.DateTimeHumanizeStrategy/Humanizer.DateTimeHumanizeStrategy.csproj
 dotnet run --project demo
 ```
