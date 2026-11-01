@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <!-- Целевая платформа: .NET 10 (совпадает с установленным у вас SDK/Runtime из Homebrew).
-         Если установлен только .NET 8 — замените на net8.0 (код от фреймворка не зависит) -->
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
